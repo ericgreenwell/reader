@@ -16,21 +16,21 @@ gpio.setup(23, gpio.OUT)
 
 r = gpio.PWM(23,60)
 l = gpio.PWM(24, 60)
-r.start(15)
-l.start(15)
+r.start(8)
+l.start(8)
 
 
 cam = PiCamera()
 #cam.resolution= (600,60)
 cam.shutter_speed=8500000 #OCR: 8000000
 #cam.iso=80
-cam.brightness=70  # OCR 70
+cam.brightness=25  # OCR 70
 cam.contrast=100   # OCR 100
 
 cam.start_preview()
 sleep(10)
 cam.stop_preview()
-cam.capture('ocr.jpg')
+cam.capture('whole.jpg')
 
 
 l.stop()

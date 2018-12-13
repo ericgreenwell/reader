@@ -1,3 +1,4 @@
+
 import cv2
 import pytesseract
 from time import sleep
