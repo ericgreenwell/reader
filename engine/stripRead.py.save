@@ -1,0 +1,13 @@
+import cv2
+import numpy as np
+
+im = cv2.imread("whole.jpg",0)
+
+temp = np.rot90(im)
+rot = np.rot90(temp)
+
+clipped =rot[50:280, 100:700]
+
+cv2.imshow("clipped", clipped)
+cv2.waitKey(0)
+

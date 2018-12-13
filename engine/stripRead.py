@@ -4,12 +4,14 @@ import numpy as np
 import peakutils
 import matplotlib
 import sys
-matplotlib.use('Agg')
+#matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-plt.switch_backend('agg')
+#plt.switch_backend('agg')
 from scipy.signal import find_peaks_cwt
 
 im = cv2.imread("whole.jpg",0)
+
+#im = im[:,:,2]
 
 temp = np.rot90(im)
 rot = np.rot90(temp)
@@ -19,11 +21,11 @@ clipped =rot[110:240, 115:660]
 #equal = cv2.equalizeHist(clipped)
 
 avg = -clipped.mean(axis=0)
-avg = avg + 200
-baseline_vals = peakutils.baseline(avg)
+avg = avg+200 
+baseline_vals = peakutils.baseline(avg,4)
 
 _, ax = plt.subplots(2,1)
-ax[0].plt(avg)
+ax[0].plot(avg)
 ax[0].plot(baseline_vals)
 ax[0].set_ylabel('8-bit Val')
 ax[0].grid(True)
@@ -38,8 +40,8 @@ ax[1].set_xlabel('pixel Index')
 ax[1].set_ylabel('8-bit Value')
 ax[1].grid(True)
 
-cv2.imshow("clipped",equal)
-cv2.waitKey(0)
+#cv2.imshow("clipped",clipped)
+#cv2.waitKey(0)
 
 if len(indices) == 2:
   print('matched')
@@ -53,8 +55,12 @@ elif len(indices) == 1:
   res= 'Negative'
   rat = 0
 
-print("finished")
 
-sys.stdout.flush()
+plt.show()
+plt.close()
+
+#print("finished")
+
+#sys.stdout.flush()
 
 
