@@ -7,68 +7,36 @@ import Image
 import RPi.GPIO as gpio
 from time import sleep
 import os, sys
+from picamera import PiCamera
 
 pathname=os.path.dirname(sys.argv[0])
 fullpath=os.path.abspath(pathname)
 
-gpio.setmode(gpio.BCM)
-gpio.setwarnings(False)
-gpio.setup(24, gpio.OUT)
-gpio.setup(23, gpio.OUT)
+im = cv2.imread('ocr.jpg',0)
 
-r = gpio.PWM(23,120)
-l = gpio.PWM(24, 120)
-r.start(30)
-l.start(30)
+cv2.imshow("original", im)
+cv2.waitKey(0)
+rot = np.rot90(im)
+full = np.rot90(rot)
 
-
-#cam = PiCamera()
-#cam.resolution= (600,60)
-#cam.shutter_speed=80000
-#cam.iso=80
-#cam.brightness=40
-#cam.framerate = 30
-#cam.capture(fullpath+'/raw_image.jpg')
-
-#cam.capture('ROITest.jpg')
-#gpio.output(24,gpio.LOW)
-#gpio.output(23, gpio.LOW)
-
-l.stop()
-r.stop()
-
-#cam.close()
-gpio.cleanup()
-cap = cv2.VideoCapture(0)
-#cap.set(15, 100)
-while:
-  _, im = cap.read()
-
-  #im = cv2.imread('ROITest.jpg',0)
-  rot = np.rot90(im)
-  full = np.rot90(rot)
-
-  clipped = full[350:480, 100:700]
-  equal = cv2.equalizeHist(clipped)
+clipped = full[350:480, 150:600]
+equal = cv2.equalizeHist(clipped)
   #equal = cv2.equalizeHist(equal)
 
-  #thresh = 18
-  #equal = cv2.threshold(clipped, thresh, 255, cv2.THRESH_BINARY)[1]
+thresh = 42
+kernel = np.ones((5,5), np.uint8)
+binary = cv2.threshold(clipped, thresh, 255, cv2.THRESH_BINARY)[1]
 
-  cv2.imshow("clipped", equal)
-  
+dilated = cv2.erode(binary, kernel, iterations=2)
+eroded = cv2.dilate(dilated, kernel, iterations=1)
 
 
-  print(pytesseract.image_to_string(equal))
-  print(pytesseract.image_to_string(Image.fromarray(equal)))
+cv2.imshow("clipped", eroded)
   
-	key = cv2.waitKey(1) & 0xFF
- 
-	# if the 'q' key is pressed, stop the loop
-	if key == ord("q"):
-		break
-  
-cv2.DestroyAllWindows()
+cv2.waitKey(0)
+
+print(pytesseract.image_to_string(eroded))
+
 """  
 0CAP_PROP_POS_MSEC Current position of the video file in milliseconds or video capture timestamp.
 1CAP_PROP_POS_FRAMES 0-based index of the frame to be decoded/captured next.

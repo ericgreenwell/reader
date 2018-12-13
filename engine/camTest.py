@@ -14,35 +14,25 @@ gpio.setwarnings(False)
 gpio.setup(24, gpio.OUT)
 gpio.setup(23, gpio.OUT)
 
-r = gpio.PWM(23,120)
-l = gpio.PWM(24, 120)
-r.start(30)
-l.start(30)
+r = gpio.PWM(23,60)
+l = gpio.PWM(24, 60)
+r.start(15)
+l.start(15)
 
 
 cam = PiCamera()
 #cam.resolution= (600,60)
-#cam.shutter_speed=80000
+cam.shutter_speed=8500000 #OCR: 8000000
 #cam.iso=80
-#cam.brightness=40
-#cam.framerate = 30
-#cam.capture(fullpath+'/raw_image.jpg')
+cam.brightness=70  # OCR 70
+cam.contrast=100   # OCR 100
 
-#img = cv2.imread(fullpath+'/raw_image.jpg')
-#raw_capture = PiRGBArray(cam)
-
-#img = raw_capture.array
-
-#cv2.imshow("CV2 Image", img)
-#cv2.waitKey(0)
-#gpio.output(24, gpio.HIGH)
-#gpio.output(23, gpio.HIGH)
 cam.start_preview()
 sleep(10)
 cam.stop_preview()
-cam.capture('ROITest.jpg')
-#gpio.output(24,gpio.LOW)
-#gpio.output(23, gpio.LOW)
+cam.capture('ocr.jpg')
+
+
 l.stop()
 r.stop()
 
